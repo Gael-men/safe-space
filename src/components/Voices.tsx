@@ -19,27 +19,30 @@ interface StoredTestimonial {
   created_at: string;
 }
 
-// Affichés à tout le monde, y compris avant qu'un visiteur ait laissé un avis.
-const seedTestimonials: Testimonial[] = [
+// Citations de cadrage, reprises de la maquette d'origine. Ce ne sont pas des
+// témoignages de participants — personne n'a encore suivi le programme — et
+// chacune est attribuée pour que la distinction reste évidente à la lecture.
+const visionQuotes = [
   {
-    key: 'seed-1',
-    quote: "J’avais l’impression de ne pas avoir ma place. Ici, j’ai réalisé que je n’étais pas seul.",
-    name: 'Kofi',
-    age: '18 ans'
+    key: 'vision-1',
+    quote: 'Être écouté sans jugement peut déjà être le début d’un changement.',
+    source: 'Vision Safe Space'
   },
   {
-    key: 'seed-2',
-    quote: "Pour la première fois, j’ai pu parler de mes émotions sans avoir peur d’être jugé.",
-    name: 'Amina',
-    age: '21 ans'
+    key: 'vision-2',
+    quote:
+      'Un espace où l’on peut parler librement est un espace dont beaucoup de jeunes ont besoin.',
+    source: 'Témoignage à venir'
   },
   {
-    key: 'seed-3',
-    quote: "Ces ateliers m’ont aidé à comprendre qui je suis vraiment.",
-    name: 'Yao',
-    age: '17 ans'
+    key: 'vision-3',
+    quote:
+      'La voix des jeunes doit participer à la construction des solutions qui les concernent.',
+    source: 'Born From School'
   }
 ];
+
+const ageRanges = ['15–17 ans', '18–21 ans', '22–25 ans', 'Plus de 25 ans'];
 
 const TESTIMONIALS_KEY = ['testimonials'] as const;
 
@@ -76,8 +79,8 @@ export default function Voices() {
   const { data: saved = [], isLoading, isError } = useQuery({
     queryKey: TESTIMONIALS_KEY,
     queryFn: fetchTestimonials,
-    // Supabase injoignable : mieux vaut basculer vite sur les voix d'origine
-    // que laisser un « Chargement… » tourner pendant des dizaines de secondes.
+    // Supabase injoignable : mieux vaut afficher vite l'état d'erreur que
+    // laisser un « Chargement… » tourner pendant des dizaines de secondes.
     retry: 1
   });
 
@@ -94,16 +97,13 @@ export default function Voices() {
     }
   });
 
-  // Les avis les plus récents en premier, les voix d'origine restent à la fin.
-  const testimonials: Testimonial[] = [
-    ...saved.map((t) => ({
-      key: t.id,
-      quote: t.quote,
-      name: t.name,
-      age: t.age ?? undefined
-    })),
-    ...seedTestimonials
-  ];
+  // Les messages les plus récents en premier.
+  const testimonials: Testimonial[] = saved.map((t) => ({
+    key: t.id,
+    quote: t.quote,
+    name: t.name,
+    age: t.age ?? undefined
+  }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,26 +128,62 @@ export default function Voices() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4" style={{ color: 'var(--brand-deep)' }}>
-            Ce que disent les jeunes
+            Votre voix compte.
           </h2>
           <p className="text-lg sm:text-xl max-w-3xl mx-auto" style={{ color: 'var(--brand-ink)', opacity: 0.75 }}>
-            Ils ont participé à nos sessions pilotes. Voici leurs mots.
+            Safe Space ne veut pas seulement parler aux jeunes. Le projet veut aussi les
+            écouter. Partagez votre point de vue, vos besoins ou une idée.
           </p>
         </motion.div>
 
         {isLoading && (
           <p className="text-center mb-8" style={{ color: 'var(--brand-ink)', opacity: 0.6 }}>
-            Chargement des témoignages…
+            Chargement des messages…
           </p>
         )}
 
         {isError && (
           <p className="text-center mb-8" style={{ color: 'var(--brand-ink)', opacity: 0.6 }}>
-            Les témoignages partagés ne sont pas accessibles pour le moment.
+            Les messages partagés ne sont pas accessibles pour le moment.
           </p>
         )}
 
-        {/* Testimonials grid */}
+        {/* Citations de cadrage */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+          {visionQuotes.map((item, index) => (
+            <motion.div
+              key={item.key}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="p-6 rounded-xl border"
+              style={{
+                backgroundColor: 'var(--brand-paper)',
+                borderColor: 'rgba(29, 102, 100, 0.12)'
+              }}
+            >
+              <p className="text-base leading-relaxed mb-4 italic" style={{ color: 'var(--brand-ink)' }}>
+                «&nbsp;{item.quote}&nbsp;»
+              </p>
+              <div className="text-sm" style={{ color: 'var(--brand-ink)', opacity: 0.55 }}>
+                — {item.source}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Messages laissés par les visiteurs */}
+        {testimonials.length > 0 && (
+          <p
+            className="text-center text-sm uppercase tracking-wide mb-6"
+            style={{ color: 'var(--brand-gold)' }}
+          >
+            {testimonials.length === 1
+              ? '1 personne s’est déjà exprimée'
+              : `${testimonials.length} personnes se sont déjà exprimées`}
+          </p>
+        )}
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           <AnimatePresence mode="popLayout">
             {testimonials.map((testimonial, index) => (
@@ -199,20 +235,20 @@ export default function Voices() {
             }}
           >
             <h3 className="text-2xl sm:text-3xl font-bold mb-6 text-center" style={{ color: 'var(--brand-deep)' }}>
-              Partagez votre avis
+              Partagez votre point de vue
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2" style={{ color: 'var(--brand-ink)' }}>
-                    Prénom (optionnel)
+                    Prénom ou pseudonyme (facultatif)
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Anonyme si tu préfères"
+                    placeholder="Anonyme si vous préférez"
                     maxLength={80}
                     className="w-full px-4 py-3 rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all"
                     style={{
@@ -224,20 +260,22 @@ export default function Voices() {
 
                 <div>
                   <label className="block text-sm font-medium mb-2" style={{ color: 'var(--brand-ink)' }}>
-                    Âge (optionnel)
+                    Tranche d’âge (facultatif)
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={formData.age}
                     onChange={(e) => setFormData(prev => ({ ...prev, age: e.target.value }))}
-                    placeholder="Ex: 19 ans"
-                    maxLength={40}
                     className="w-full px-4 py-3 rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all"
                     style={{
                       borderColor: 'rgba(29, 102, 100, 0.2)',
                       color: 'var(--brand-ink)'
                     }}
-                  />
+                  >
+                    <option value="">Tranche d’âge (facultatif)</option>
+                    {ageRanges.map(range => (
+                      <option key={range} value={range}>{range}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -248,7 +286,7 @@ export default function Voices() {
                 <textarea
                   value={formData.message}
                   onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                  placeholder="Qu'est-ce que tu aimerais dire ou partager ?"
+                  placeholder="Que pensez-vous de Safe Space ? Qu’aimeriez-vous trouver dans un espace comme celui-ci ?"
                   required
                   rows={4}
                   maxLength={2000}
@@ -262,7 +300,7 @@ export default function Voices() {
 
               {mutation.isError && (
                 <p className="text-sm text-center" style={{ color: '#b3261e' }}>
-                  Ton témoignage n'a pas pu être enregistré. Réessaie dans un instant.
+                  Votre message n’a pas pu être enregistré. Réessayez dans un instant.
                 </p>
               )}
 
@@ -271,7 +309,7 @@ export default function Voices() {
                   className="w-full px-6 py-4 rounded-lg font-semibold text-center transition-all"
                   style={{ backgroundColor: 'rgba(29, 102, 100, 0.1)', color: 'var(--brand-teal)' }}
                 >
-                  ✓ Merci ! Ton avis est maintenant visible par tout le monde.
+                  ✓ Merci ! Votre point de vue est maintenant visible sur cette page.
                 </div>
               ) : (
                 <button
@@ -280,7 +318,7 @@ export default function Voices() {
                   className="w-full px-6 py-4 rounded-lg font-semibold text-white transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   style={{ backgroundColor: 'var(--brand-teal)' }}
                 >
-                  {mutation.isPending ? 'Envoi en cours...' : 'Envoyer mon témoignage'}
+                  {mutation.isPending ? 'Envoi en cours…' : 'Partager mon point de vue'}
                   <Send size={18} />
                 </button>
               )}

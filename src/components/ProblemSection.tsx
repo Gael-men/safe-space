@@ -1,25 +1,26 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { Brain, Users, MessageCircleOff, Compass } from 'lucide-react';
 
 const problems = [
   {
-    emoji: '🧠',
+    icon: Brain,
     title: 'Bien-être psychologique',
     description: "Les jeunes peuvent traverser anxi\u00e9t\u00e9, solitude, stress et mal-\u00eatre sans disposer d\u2019un espace adapt\u00e9 pour en parler."
   },
   {
-    emoji: '🤝',
+    icon: Users,
     title: 'Isolement émotionnel',
     description: "La connexion num\u00e9rique ne remplace pas toujours le lien humain, l\u2019\u00e9coute et le sentiment d\u2019appartenance."
   },
   {
-    emoji: '🗣️',
+    icon: MessageCircleOff,
     title: 'Le poids des tabous',
     description: "La sant\u00e9 mentale, les \u00e9motions et la sexualit\u00e9 restent parfois difficiles \u00e0 aborder librement."
   },
   {
-    emoji: '🧭',
+    icon: Compass,
     title: 'Besoin de repères',
     description: "Les jeunes ont besoin d\u2019informations fiables, d\u2019\u00e9coute et d\u2019accompagnement adapt\u00e9s \u00e0 leurs r\u00e9alit\u00e9s."
   }
@@ -49,7 +50,9 @@ export default function ProblemSection() {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {problems.map((problem, index) => (
+          {problems.map((problem, index) => {
+            const Icon = problem.icon;
+            return (
             <motion.div
               key={problem.title}
               initial={{ opacity: 0, y: 40 }}
@@ -58,8 +61,11 @@ export default function ProblemSection() {
               className="bg-gradient-to-br from-white to-[var(--brand-paper)] p-6 rounded-xl border hover:shadow-lg transition-all group"
               style={{ borderColor: 'rgba(29, 102, 100, 0.1)' }}
             >
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
-                {problem.emoji}
+              <div
+                className="w-14 h-14 mb-5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                style={{ backgroundColor: 'rgba(29, 102, 100, 0.08)' }}
+              >
+                <Icon size={26} strokeWidth={1.75} style={{ color: 'var(--brand-teal)' }} />
               </div>
               <h3 className="text-lg font-bold mb-3" style={{ color: 'var(--brand-deep)' }}>
                 {problem.title}
@@ -68,7 +74,8 @@ export default function ProblemSection() {
                 {problem.description}
               </p>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

@@ -286,10 +286,19 @@
 
   html {
     scroll-behavior: smooth;
+    /* `clip` plutôt que `hidden` : même effet de coupe, mais sans créer de
+       conteneur de défilement, ce qui laisse `position: sticky` utilisable. */
+    overflow-x: clip;
   }
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    /* Plusieurs sections animent leur entrée par une translation horizontale
+       (framer-motion, x: ±40). Tant qu'une carte n'est pas encore apparue, elle
+       est décalée hors de la grille et élargit la page — ce qui provoquait une
+       barre de défilement horizontale sur mobile. On coupe ce débordement ici
+       plutôt que section par section, pour couvrir aussi les halos décoratifs. */
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4, h5, h6 {

@@ -1,7 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { School, HandHeart, Briefcase, MapPin, Mail, Phone, Instagram } from 'lucide-react';
-import { FaWhatsapp, FaLinkedin } from 'react-icons/fa';
+import { School, HandHeart, Briefcase, MapPin, Mail, Phone } from 'lucide-react';
 
 const partnerTypes = [
   {
@@ -82,7 +81,7 @@ export default function Partners() {
           className="max-w-2xl mx-auto"
         >
           <div 
-            className="rounded-2xl p-8 sm:p-10 relative overflow-hidden"
+            className="rounded-2xl p-6 sm:p-10 relative overflow-hidden"
             style={{ backgroundColor: 'var(--brand-deep)' }}
           >
             {/* Ambient glow */}
@@ -93,7 +92,7 @@ export default function Partners() {
                 Nous contacter
               </h3>
 
-              <div className="space-y-5 mb-8">
+              <div className="space-y-5">
                 <div className="flex items-start gap-4">
                   <MapPin size={24} className="flex-shrink-0 mt-1" style={{ color: 'var(--brand-gold)' }} />
                   <span className="text-lg" style={{ color: 'var(--brand-paper)' }}>
@@ -103,9 +102,13 @@ export default function Partners() {
 
                 <div className="flex items-start gap-4">
                   <Mail size={24} className="flex-shrink-0 mt-1" style={{ color: 'var(--brand-gold)' }} />
-                  <a 
+                  <a
                     href="mailto:bornfromschool.hrm@gmail.com"
-                    className="text-lg hover:underline transition-all"
+                    // L'adresse est le plus long mot insécable de la page.
+                    // min-w-0 lève la largeur minimale implicite que flex donne
+                    // à ses enfants ; break-words l'autorise à se couper plutôt
+                    // qu'à déborder si l'écran est vraiment étroit.
+                    className="text-base sm:text-lg min-w-0 break-words hover:underline transition-all"
                     style={{ color: 'var(--brand-paper)' }}
                   >
                     bornfromschool.hrm@gmail.com
@@ -133,39 +136,6 @@ export default function Partners() {
                 </div>
               </div>
 
-              <div className="pt-6 border-t" style={{ borderColor: 'rgba(217, 164, 65, 0.3)' }}>
-                <div className="text-sm mb-3 uppercase tracking-wide" style={{ color: 'var(--brand-gold)', opacity: 0.8 }}>
-                  Suivez-nous
-                </div>
-                <div className="flex gap-4">
-                  <a
-                    href="#"
-                    className="w-12 h-12 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-                    style={{ backgroundColor: 'rgba(217, 164, 65, 0.2)' }}
-                    aria-label="Instagram"
-                  >
-                    <Instagram size={20} style={{ color: 'var(--brand-gold)' }} />
-                  </a>
-                  <a
-                    href="https://wa.me/22890175639"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-                    style={{ backgroundColor: 'rgba(217, 164, 65, 0.2)' }}
-                    aria-label="WhatsApp"
-                  >
-                    <FaWhatsapp size={20} style={{ color: 'var(--brand-gold)' }} />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-                    style={{ backgroundColor: 'rgba(217, 164, 65, 0.2)' }}
-                    aria-label="LinkedIn"
-                  >
-                    <FaLinkedin size={20} style={{ color: 'var(--brand-gold)' }} />
-                  </a>
-                </div>
-              </div>
             </div>
           </div>
         </motion.div>
