@@ -1,5 +1,6 @@
 import safeSpaceLogo from '@assets/WhatsApp_Image_2026-06-21_at_19.47.03_(1)_1785498945838.jpeg';
 import bfsLogo from '@assets/WhatsApp_Image_2026-06-21_at_18.53.38-removebg-preview_1785498945842.png';
+import rcomLogo from '@assets/rcom-logo-clair.png';
 
 export default function Footer() {
   return (
@@ -43,6 +44,20 @@ export default function Footer() {
         {/* Copyright */}
         <div className="text-center text-sm" style={{ color: 'var(--brand-paper)', opacity: 0.6 }}>
           © 2026 Safe Space · Born From School
+        </div>
+
+        {/* Crédit de réalisation — volontairement séparé des logos du projet en
+            haut de page : RCOM est le prestataire, pas un partenaire de Safe Space. */}
+        <div className="mt-6 flex items-center justify-center gap-2.5">
+          <span className="text-xs" style={{ color: 'var(--brand-paper)', opacity: 0.5 }}>
+            Site réalisé par
+          </span>
+          <img
+            src={rcomLogo}
+            alt="RCOM — Une raison de communiquer"
+            className="h-5 w-auto"
+            style={{ opacity: 0.7 }}
+          />
         </div>
       </div>
     </footer>

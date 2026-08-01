@@ -1,5 +1,11 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import hero640 from '@assets/hero-640.jpg';
+import hero1024 from '@assets/hero-1024.jpg';
+import hero1600 from '@assets/hero-1600.jpg';
+import fond768 from '@assets/fond-768.jpg';
+import fond1280 from '@assets/fond-1280.jpg';
+import fond1920 from '@assets/fond-1920.jpg';
 
 export default function Hero() {
   const scrollToSection = (href: string) => {
@@ -10,8 +16,34 @@ export default function Hero() {
   };
 
   return (
-    <section id="accueil" className="relative min-h-screen flex items-center pt-20" style={{ backgroundColor: 'var(--brand-paper)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+    <section id="accueil" className="relative min-h-screen flex items-center pt-20 overflow-hidden" style={{ backgroundColor: 'var(--brand-paper)' }}>
+      {/* Fond photographique plein cadre. objectPosition décalé vers la droite
+          pour que la porte reste visible sur mobile, où le recadrage ne garde
+          qu'une bande verticale de cette image panoramique. */}
+      <img
+        src={fond1280}
+        srcSet={`${fond768} 768w, ${fond1280} 1280w, ${fond1920} 1920w`}
+        sizes="100vw"
+        alt=""
+        aria-hidden="true"
+        fetchPriority="high"
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ objectPosition: '62% 50%' }}
+      />
+
+      {/* Voile crème. Dégradé et non aplat : dense à gauche sous le titre en
+          texte foncé, il s'ouvre vers la droite pour laisser respirer la porte
+          et la lumière. Sans lui, le titre passerait sur le mur clair et les
+          zones lumineuses sans contraste suffisant. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(100deg, rgba(247,245,239,0.96) 0%, rgba(247,245,239,0.90) 38%, rgba(247,245,239,0.62) 68%, rgba(247,245,239,0.45) 100%)'
+        }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Text content */}
           <motion.div
@@ -70,10 +102,35 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div 
+            <div
               className="relative rounded-2xl p-8 sm:p-10 overflow-hidden shadow-2xl"
               style={{ backgroundColor: 'var(--brand-deep)' }}
             >
+              {/* Photo d'ambiance. Le navigateur choisit la taille selon la largeur
+                  réelle d'affichage (sizes), ce qui évite d'envoyer 176 ko à un
+                  téléphone en données mobiles. Pas de lazy loading : l'image est
+                  dans le premier écran, la différer retarderait son apparition. */}
+              <img
+                src={hero1024}
+                srcSet={`${hero640} 640w, ${hero1024} 1024w, ${hero1600} 1600w`}
+                sizes="(min-width: 1024px) 560px, 100vw"
+                alt=""
+                aria-hidden="true"
+                fetchPriority="high"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ objectPosition: '60% 60%' }}
+              />
+
+              {/* Voile dégradé : sans lui, le texte clair passerait sur le mur
+                  crème de la photo et deviendrait illisible. */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(160deg, rgba(18,60,69,0.94) 0%, rgba(18,60,69,0.82) 45%, rgba(18,60,69,0.66) 100%)'
+                }}
+              />
+
               {/* Ambient glows */}
               <div className="ambient-glow-gold" style={{ top: '-100px', right: '-50px' }} />
               <div className="ambient-glow-teal" style={{ bottom: '-80px', left: '-60px' }} />
